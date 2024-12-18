@@ -1,4 +1,4 @@
-# GPC reader (multiple peaks version, Dec 2024)
+# GPC reader 
 #                     Libraries          #######
 
 #if(!require(shiny)) install.packages("shiny")
