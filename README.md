@@ -17,7 +17,7 @@ install.packages("purrr")
 install.packages("DT")
 ```
 
-**3.** Open [app.R]{style="color:navy;font-weight:400;font-size:16px"} file in Rstudio and click [⏵]{style="color:seagreen;font-weight:550;font-size:14px"}[Run App]{style="color: #212f3c ;font-weight:550;font-size:14px"} (an icon located in the top right corner).
+**3.** Open *app.R* file in Rstudio and click **Run App** (an icon located in the top right corner).
 
 ### Usage
 
