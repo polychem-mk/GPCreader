@@ -6,15 +6,15 @@ This is an R Shiny application for routine calculations of Mp, average molecular
 
 ### Packages
 
-```{=html}
-<pre>
-R version 4.4.3 (2025-02-28)  
+DT 0.33\
+purrr 1.0.2\
+dplyr 1.1.4.9000\
+stringr 1.5.1\
+tidyr 1.3.1\
+shiny 1.9.1\
+here 1.0.1
 
-DT 0.33         purrr 1.0.2       dplyr 1.1.4.9000      stringr 1.5.1   
-tidyr 1.3.1     shiny 1.9.1       here 1.0.1       
-
-</pre>
-```
+R version 4.4.3 (2025-02-28)
 
 ### Run GPCreader from RStudio
 
@@ -34,13 +34,13 @@ install.packages("here")
 
 **3.** Clone the git repository.
 
-**4.** Open *app.R* file in Rstudio and click **Run App** (an icon located in the top right corner).
+**4.** Open *app.R* file in Rstudio and click **Run App** (an icon in the top right corner).
 
 ------------------------------------------------------------------------
 
 ### Usage
 
-Instructions for use are in the file *GPC_reader.pdf*.
+Instructions for use are in the file *GPCreader.pdf*.
 
 #### Calibration
 
