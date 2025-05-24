@@ -24,33 +24,37 @@ server <- function(input, output, session) {
     # the chromatogram to this value
     s_peak <- input$syst_peak_calib
 
-    # 'read_calib_files' is a list of data frames with the original data, where
-    # x is the time (or volume) and y is the detector signal intensity
-    read_calib_files = readGPC(calib_data_info())
+    withProgress(
+      message = 'Calculation in progress',
+      {
+        # 'read_calib_files' is a list of data frames with the original data, where
+        # x is the time (or volume) and y is the detector signal intensity
+        read_calib_files = readGPC(calib_data_info())
 
-    # 'calib_peaks' is a list of data frames with data after intensity correction
-    # and peak detection. If the chromatogram is noisy, smoothing is also applied
-    # to the intensity. shoulder.sens = 1 is setting for calibration files; if
-    # the chromatogram is a mixture of standards, then merged peaks (shoulder peaks)
-    # will be detected if their intensity exceeds 25% of the maximum intensity
-    calib_peaks = find_peaks(read_calib_files,
-                             syst.peak = s_peak,
-                             shoulder.sens = 1 )
+        # 'calib_peaks' is a list of data frames with data after intensity correction
+        # and peak detection. If the chromatogram is noisy, smoothing is also applied
+        # to the intensity. shoulder.sens = 1 is setting for calibration files; if
+        # the chromatogram is a mixture of standards, then merged peaks (shoulder peaks)
+        # will be detected if their intensity exceeds 25% of the maximum intensity
+        calib_peaks = find_peaks(read_calib_files,
+                                 syst.peak = s_peak,
+                                 shoulder.sens = 1 )
 
-    # If the input 'first_peak' is checked and more than one file is loaded,
-    # then for files with calibration standards, only the first peak from each
-    # chromatogram is detected.
-    if(input$first_peak & length(calib_peaks) > 1){
-      filter_peaks(calib_peaks,
-                   first.peak = TRUE,
-                   tails = FALSE)
-    }else{
+        # If the input 'first_peak' is checked and more than one file is loaded,
+        # then for files with calibration standards, only the first peak from each
+        # chromatogram is detected.
+        if(input$first_peak & length(calib_peaks) > 1){
+          filter_peaks(calib_peaks,
+                       first.peak = TRUE,
+                       tails = FALSE)
+        }else{
 
-      # Otherwise, all peaks are detected, including shoulder peaks.
-      filter_peaks(calib_peaks,
-                   first.peak = FALSE,
-                   tails = FALSE)
-    }
+          # Otherwise, all peaks are detected, including shoulder peaks.
+          filter_peaks(calib_peaks,
+                       first.peak = FALSE,
+                       tails = FALSE)
+        }
+      })
   })
 
   # 1.1.3 Calibration files information is in the data frame with columns:
@@ -626,14 +630,17 @@ server <- function(input, output, session) {
   gpc_data  <- reactive( {
     s_peak = input$syst_peak
 
+    withProgress(
+      message = 'Calculation in progress',
+      {
+        file_info_GPC_files = file_info(path = input$gpc_file$datapath,
+                                        name = input$gpc_file$name)
+        read_GPC_files = readGPC(file_info_GPC_files)
 
-    file_info_GPC_files = file_info(path = input$gpc_file$datapath,
-                                    name = input$gpc_file$name)
-    read_GPC_files = readGPC(file_info_GPC_files)
-
-    find_peaks(dataGPC = read_GPC_files,
-               syst.peak = s_peak,
-               shoulder.sens = 2)
+        find_peaks(dataGPC = read_GPC_files,
+                   syst.peak = s_peak,
+                   shoulder.sens = 2)
+      })
   })
 
   ### GPC peaks                                  ------------------------------
@@ -890,16 +897,11 @@ server <- function(input, output, session) {
 
     validate( need( length(input$gpc_file) != 0, '') )
 
-    withProgress(
-      message = 'Calculation in progress',
-
-      {
-        DT::datatable(results(),
-                      class = "row-border",
-                      options = list(searching = FALSE,
-                                     filter = "none",
-                                     lengthChange = FALSE))
-      })
+    DT::datatable(results(),
+                  class = "row-border",
+                  options = list(searching = FALSE,
+                                 filter = "none",
+                                 lengthChange = FALSE))
   })
 
   # 4.3.2  Handle saving results
@@ -937,14 +939,17 @@ server <- function(input, output, session) {
         cex = 0.9, mgp = c(2, 1, 0),
         mar = c(4, 3, 2, 1) + 0.1)
 
-    plotMWD(dataGPC = gpc_data(),
-            dataMWD = gpc_calc(),
-            dataPDI = results(),
-            add.fitted = fit,
-            text.size = 1)
+    withProgress(
+      message = 'Making plots',
 
+      {
+        plotMWD(dataGPC = gpc_data(),
+                dataMWD = gpc_calc(),
+                dataPDI = results(),
+                add.fitted = fit,
+                text.size = 1)
+      })
   } ,
   height = function(){50 + round(length(input$gpc_file$datapath)*1.3)*250}
   )
-
 }
