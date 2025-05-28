@@ -1,4 +1,4 @@
-### GPC reader
+<img src="images/logo.png" align="right" width="30%" height="30%"/>
 
 This is an R Shiny application for routine calculations of Mp, average molecular weights (Mn and Mw), and PDI from GPC chromatograms (Gel permeation chromatography/size exclusion chromatography (SEC)). You can upload multiple files, inducing calibration files, and save results as csv file.
 
